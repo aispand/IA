@@ -80,11 +80,11 @@
 
   .validated-header {
       font-size: 0.9rem;
-      font-weight: 800; /* Més gruixut per destacar */
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-light);
-      margin-bottom: 20px; /* Més espai a sota ja que no hi ha subtítol */
+      margin-bottom: 20px;
   }
 
   /* Grid de noms */
@@ -187,14 +187,28 @@
       background-color: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px);
   }
   .modal-content {
-      background: white; width: 90%; max-width: 600px; max-height: 85vh;
+      background: white; width: 90%; max-width: 750px; max-height: 85vh;
       border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden;
   }
   .modal-header { padding: 18px 25px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
   .modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--primary-color); }
   .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #a0aec0; }
-  .modal-body { overflow-y: auto; padding: 30px; font-size: 0.95rem; line-height: 1.6; color: #2d3748; }
+  .modal-body { 
+      overflow-y: auto; 
+      padding: 40px; 
+      font-size: 0.95rem; 
+      line-height: 1.6; 
+      color: #2d3748; 
+      text-align: justify; /* JUSTIFICAT PERQUÈ SEMBLI OFICIAL */
+  }
   .modal-footer { padding: 20px; border-top: 1px solid #e2e8f0; text-align: center; background: #fff; }
+
+  /* Estils específics de les bases */
+  .modal-body h3 { color: var(--primary-color); font-size: 1.1rem; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; text-align: left; }
+  .modal-body p { margin-bottom: 15px; }
+  .modal-body ul { padding-left: 20px; margin-bottom: 15px; }
+  .modal-body li { margin-bottom: 8px; }
+  .modal-body strong { color: #1a202c; }
 
   .success-icon { font-size: 50px; margin-bottom: 15px; display: block; }
   .btn-download { background: var(--success-green); margin-bottom: 10px; }
@@ -212,6 +226,7 @@
       .logo-ia { height: 120px; }
       .main-card { padding: 30px 20px; }
       h1 { font-size: 1.5rem; }
+      .modal-body { padding: 20px; }
   }
 </style>
 </head>
@@ -254,7 +269,6 @@
 
 <div class="validated-section">
     <div class="validated-header">PROPOSTES VALIDADES AMB SUPERVISIÓ PRÈVIA</div>
-    
     <div id="validated-list">
         <div class="empty-list">Carregant llista...</div>
     </div>
@@ -267,19 +281,94 @@
             <button class="close-btn" onclick="tancarModalBoto('modalBases')">&times;</button>
         </div>
         <div class="modal-body" id="text-bases-imprimir">
-            <p><strong>BASES DEL CONCURS D'IDEES PER A LA DENOMINACIÓ DE LA PLATAFORMA D'INTEL·LIGÈNCIA ARTIFICIAL DEL COMÚ D'ENCAMP</strong></p>
+            <p style="text-align: center; font-weight: bold; margin-bottom: 20px;">BASES DEL CONCURS D'IDEES PER A LA DENOMINACIÓ DE LA PLATAFORMA D'INTEL·LIGÈNCIA ARTIFICIAL DEL COMÚ D'ENCAMP</p>
+            
             <h3>1. OBJECTE DEL CONCURS</h3>
-            <p>El Comú d'Encamp convoca un concurs d'idees intern amb l'objectiu de trobar un nom original, representatiu i amb sonoritat catalana per a la nova plataforma d'Intel·ligència Artificial de la corporació.</p>
+            <p>El Comú d'Encamp convoca un concurs d'idees intern amb l'objectiu de seleccionar un nom original, representatiu i amb identitat pròpia per a la nova plataforma d'Intel·ligència Artificial de la corporació.</p>
+
             <h3>2. PARTICIPANTS</h3>
-            <p>El concurs és obert exclusivament a persones físiques que mantinguin una relació laboral activa amb el Comú d'Encamp i disposin de número de personal assignat.</p>
-            <h3>3. REQUISITS</h3>
-            <p>Longitud màxima 15 caràcters. Sense insults. Originalitat i sense drets de tercers.</p>
-            <h3>4. MECÀNICA I ANONIMAT</h3>
-            <p>El procés serà anònim fins a l'adjudicació del premi. El sistema generarà un codi SHA-256 a partir de la contrasenya. És obligatori guardar la contrasenya.</p>
-            <h3>5. PREMI</h3>
-            <p>iPhone 17 Pro. El guanyador s'anunciarà al Sopar de Nadal.</p>
-            <h3>6. PROPIETAT INTEL·LECTUAL</h3>
-            <p>El nom passarà a ser propietat exclusiva del Comú d'Encamp.</p>
+            <p>2.1. Podran participar en aquest concurs totes les persones que mantinguin una relació laboral activa amb el Comú d'Encamp, pertanyents a les següents categories:</p>
+            <ul>
+                <li>Funcionaris.</li>
+                <li>Treballadors públics interins.</li>
+                <li>Personal de relació especial.</li>
+                <li>Personal nomenat.</li>
+            </ul>
+            <p>2.2. Exclusions: Queden expressament exclosos de la participació els membres del Consell de Comú i el Secretari General.</p>
+            <p>2.3. La participació és estrictament individual.</p>
+
+            <h3>3. REQUISITS DE LES PROPOSTES</h3>
+            <p>Les propostes hauran de complir els següents requisits tècnics i ètics:</p>
+            <ul>
+                <li><strong>Format:</strong> El nom ha de tenir una longitud màxima de 15 caràcters (espais inclosos).</li>
+                <li><strong>Caràcters permesos:</strong> Únicament s'acceptaran lletres (incloent-hi accents i caràcters propis com la 'ç' o la 'l·l'), números i espais. No s'admeten símbols gràfics (@, #, $, %, etc.) ni emojis.</li>
+                <li><strong>Contingut:</strong> Quedaran automàticament desqualificades les propostes que continguin insults, expressions grolleres, discriminatòries o que puguin atemptar contra la imatge institucional del Comú.</li>
+                <li><strong>Exclusivitat simbòlica:</strong> El nom proposat ha de ser diferenciador i no pot coincidir amb símbols, tradicions o elements patrimonials ja existents (per exemple: l'Ossa), per evitar confusions i dotar la IA d'una identitat nova.</li>
+                <li><strong>Originalitat:</strong> El nom ha de ser inèdit i no pot estar registrat prèviament com a marca comercial ni tenir drets d'autor vigents per tercers.</li>
+            </ul>
+
+            <h3>4. MECÀNICA DE PARTICIPACIÓ I SISTEMA DE SEGURETAT (HASH)</h3>
+            <p>Per garantir l'anonimat absolut durant el procés de selecció i la integritat de l'autoria, s'utilitza un sistema criptogràfic:</p>
+            <p><strong>4.1. El Registre (Fase Proposta):</strong></p>
+            <ul>
+                <li>El participant introdueix el Nom Proposat i es crea una Contrasenya única.</li>
+                <li>El sistema no guarda la contrasenya. En el seu lloc, genera automàticament una empremta digital única anomenada Codi Hash (SHA-256).</li>
+                <li>A la base de dades del jurat només hi arriba: El Nom Proposat + El Codi Hash. Ningú pot saber qui és l'autor en aquesta fase.</li>
+            </ul>
+            <p><strong>4.2. La Validació:</strong></p>
+            <ul>
+                <li>La contrasenya actua com la clau que obre el “candau” (Hash).</li>
+                <li>En el moment de lliurar el premi, el guanyador haurà de facilitar la seva contrasenya. El sistema recalcularà el Hash: si coincideix amb el que hi ha a la base de dades, es demostra matemàticament i irrefutablement que aquella persona és l'autora del nom.</li>
+            </ul>
+            <p><strong>4.3. Responsabilitat:</strong> És obligatori que el participant guardi la contrasenya (o el PDF justificant). Sense ella, serà impossible reclamar l'autoria i es perdrà el dret al premi.</p>
+
+            <h3>5. PROCEDIMENT DE VALIDACIÓ I PUBLICITAT</h3>
+            <p><strong>5.1. Filtre previ:</strong> Totes les propostes passaran per una validació a càrrec del Secretari General per verificar el compliment dels requisits mínims (absència d'insults, format correcte, etc.).</p>
+            <p><strong>5.2. Llistat públic:</strong> Aproximadament cada 24 hores, s'actualitzarà a la web del concurs un llistat amb els noms validats.</p>
+            <ul>
+                <li>Si un nom no apareix, pot ser degut a que encara no s'ha validat o que ha estat descartat per incompliment.</li>
+                <li>Si el participant considera que la seva proposta complia els requisits, pot tornar a intentar enviar-la o contactar amb Recursos Humans.</li>
+            </ul>
+            <p><strong>5.3. Reclamacions:</strong> En cas de desacord amb la no-validació, el participant podrà enviar un correu electrònic al Departament de Recursos Humans, que analitzarà si hi ha hagut discrecionalitat en el filtratge.</p>
+
+            <h3>6. CRITERIS DE DUPLICITAT</h3>
+            <p>No s'acceptaran noms repetits. El sistema bloqueja automàticament les propostes idèntiques. En cas de noms extremadament similars (per exemple, amb diferències només d'espais o majúscules/minúscules), prevaldrà sempre la proposta que hagi entrat primer al sistema, segons el registre de data i hora (timestamp) del servidor.</p>
+
+            <h3>7. CALENDARI I FASES</h3>
+            <ul>
+                <li><strong>Presentació de propostes:</strong> Del 28 de novembre al 5 de desembre de 2025.</li>
+                <li><strong>Selecció de finalistes (Jurat 1):</strong> 8 i 9 de desembre de 2025.</li>
+                <li><strong>Votació popular (Jurat 2):</strong> Del 12 al 16 de desembre de 2025.</li>
+                <li><strong>Anunci del guanyador:</strong> 18 de desembre de 2025 (Sopar de Nadal).</li>
+            </ul>
+
+            <h3>8. SISTEMA DE JURAT I CRITERIS DE VALORACIÓ</h3>
+            <p>El procés consta de dues fases eliminatòries:</p>
+            <p><strong>FASE 1: Jurat Tècnic (Consellers de Comú)</strong> Els Consellers de Comú seleccionaran les 10 millors propostes basant-se en els següents criteris:</p>
+            <ul>
+                <li><strong>Sonoritat Catalana/Andorrana:</strong> Adequació lingüística i cultural.</li>
+                <li><strong>Vinculació amb Encamp:</strong> Capacitat d'evocar la identitat de la parròquia.</li>
+                <li><strong>Innovació:</strong> Caràcter tecnològic i modern.</li>
+                <li><strong>Impacte:</strong> Brevetat, facilitat de record i potència comunicativa.</li>
+                <li><strong>Creativitat i Abstracció:</strong> Es valorarà positivament la creació de nous conceptes. Es penalitzaran o descartaran els noms propis de persona (antropònims) per afavorir l'originalitat.</li>
+            </ul>
+            <p><strong>FASE 2: Votació Popular (Treballadors)</strong></p>
+            <ul>
+                <li>Els 10 finalistes se sotmetran a votació oberta a tots els treballadors qualificats com a participants.</li>
+                <li>Per poder votar, serà necessari identificar-se mitjançant el correu electrònic corporatiu personal.</li>
+                <li>Cada treballador podrà emetre un únic vot.</li>
+                <li>En cas d'empat al primer lloc, decidirà el vot de qualitat dels Cònsols.</li>
+            </ul>
+
+            <h3>9. PREMI I LLIURAMENT</h3>
+            <p>9.1. S'estableix un únic premi consistent en un iPhone 17 Pro.</p>
+            <p>9.2. El nom guanyador es farà públic durant el Sopar de Nadal del Comú d'Encamp.</p>
+            <p>9.3. Posteriorment, s'enviarà un comunicat via correu electrònic a tot el personal amb la classificació final.</p>
+            <p>9.4. Lliurament: El guanyador/a haurà de contactar amb el Secretari General, en el termini màxim de 10 dies hàbils, per validar la seva identitat mitjançant la contrasenya de registre. Un cop verificat, el premi serà lliurat pels Cònsols.</p>
+            <p>9.5. Si el guanyador no pot acreditar la contrasenya o no contacta en el termini previst en l’apartat anterior, el premi passarà automàticament a la següent proposta més votada que haurà de seguir el previst en el punt 9.4.</p>
+
+            <h3>10. PROPIETAT INTEL·LECTUAL</h3>
+            <p>La participació en el concurs implica la plena acceptació d'aquestes bases. Tot i que es reconeixerà públicament l'autoria de la idea, la propietat intel·lectual, els drets d'explotació i l'ús del nom passaran a ser propietat exclusiva del Comú d'Encamp, que podrà registrar-lo, modificar-lo o utilitzar-lo segons consideri oportú sense cap contraprestació addicional al premi lliurat.</p>
         </div>
     </div>
 </div>
@@ -486,28 +575,35 @@
     const pdfImgHeight = (imgProps.height * contentWidth) / imgProps.width;
     doc.addImage(imgFormulari, 'PNG', margin, 70, contentWidth, pdfImgHeight);
 
-    let yPos = 70 + pdfImgHeight + 10;
+    let yPos = 70 + pdfImgHeight + 15;
     doc.setDrawColor(200);
     doc.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += 8;
+    yPos += 10;
 
+    // TEXT BASES
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
     doc.text("BASES DEL CONCURS:", margin, yPos);
-    yPos += 6;
+    yPos += 8;
 
     doc.setFontSize(10);
     doc.setTextColor(80);
-    const textBases = document.getElementById('text-bases-imprimir').innerText;
+    
+    // Agafem el text de les bases del modal, però netejant una mica l'HTML
+    const basesElement = document.getElementById('text-bases-imprimir');
+    const textBases = basesElement.innerText; 
+    
     const lines = doc.splitTextToSize(textBases, contentWidth);
     
+    // Paginació intel·ligent
+    const lineHeight = 5;
     for (let i = 0; i < lines.length; i++) {
         if (yPos > pageHeight - 20) {
             doc.addPage(); 
             yPos = 20; 
         }
         doc.text(lines[i], margin, yPos);
-        yPos += 5;
+        yPos += lineHeight;
     }
   }
 
