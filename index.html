@@ -14,7 +14,7 @@
   :root {
       --primary-color: #005f85; /* Blau Encamp */
       --accent-color: #764ba2; /* Lila Tech */
-      --glass-bg: rgba(255, 255, 255, 0.95); /* Més opac per seriositat */
+      --glass-bg: rgba(255, 255, 255, 0.95); 
       --glass-border: rgba(226, 232, 240, 0.8);
       --text-dark: #1a202c;
       --text-light: #4a5568;
@@ -25,7 +25,6 @@
   /* FONS SERIÓS I PROFESSIONAL */
   body {
       font-family: 'Montserrat', sans-serif;
-      /* Degradat subtil gris-blau professional (estàtic) */
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       color: var(--text-dark);
       margin: 0;
@@ -34,25 +33,22 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      /* justify-content: center; tret per permetre scroll */
   }
 
   /* CAPÇALERA LOGO */
   header {
       display: flex;
       justify-content: center;
-      align-items: center;
       margin-bottom: 30px;
       width: 100%;
       z-index: 2;
   }
   
-  /* LOGO IA MÉS GRAN */
   .logo-ia { 
-      height: 160px; /* Mida augmentada */
+      height: 160px; 
       object-fit: contain;
       filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-      /* Animació flotant molt suau i lenta */
       animation: float 8s ease-in-out infinite;
   }
 
@@ -61,19 +57,76 @@
       50% { transform: translateY(-10px); }
   }
 
-  /* TARGETA PRINCIPAL (Clean & Professional) */
+  /* TARGETA PRINCIPAL */
   .main-card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       width: 100%;
       max-width: 550px;
       padding: 50px 40px;
-      border-radius: 16px; /* Cantonades menys rodones = més seriós */
+      border-radius: 16px;
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
       position: relative;
   }
 
-  /* TÍTOLS */
+  /* SECCIÓ NOMS VALIDATS */
+  .validated-section {
+      width: 100%;
+      max-width: 800px;
+      margin-top: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+  }
+
+  .validated-header {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      margin-bottom: 5px;
+  }
+
+  .validated-disclaimer {
+      font-size: 0.8rem;
+      color: #718096;
+      font-style: italic;
+      margin-bottom: 25px;
+  }
+
+  /* Grid de noms */
+  #validated-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+  }
+
+  .name-tag {
+      background: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      color: var(--primary-color);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid white;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      cursor: default;
+  }
+
+  .name-tag:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 95, 133, 0.15);
+      border-color: var(--primary-color);
+  }
+
+  .empty-list { color: #a0aec0; font-size: 0.9rem; padding: 20px; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ESTILS GENERALS FORMULARI */
   h1 {
       text-align: center;
       color: var(--primary-color);
@@ -92,7 +145,6 @@
       font-weight: 500;
   }
 
-  /* CAMPS DEL FORMULARI */
   .camp { margin-bottom: 25px; position: relative; }
   
   label {
@@ -106,131 +158,52 @@
   }
   
   input[type="text"], textarea {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #cbd5e0;
-      border-radius: 8px; /* Bordes més professionals */
-      font-size: 16px;
-      box-sizing: border-box;
-      font-family: 'Montserrat', sans-serif;
-      background: #fff;
-      transition: all 0.2s ease;
+      width: 100%; padding: 15px; border: 1px solid #cbd5e0; border-radius: 8px;
+      font-size: 16px; box-sizing: border-box; font-family: 'Montserrat', sans-serif;
+      background: #fff; transition: all 0.2s ease;
   }
 
-  input:focus, textarea:focus {
-      border-color: var(--primary-color);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(0, 95, 133, 0.1);
-  }
+  input:focus, textarea:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(0, 95, 133, 0.1); }
 
-  /* Estil Codi Hash (Look Tècnic) */
   textarea#codi_generat {
-      background-color: #f1f5f9;
-      color: #2d3748;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      resize: none;
-      height: 75px;
-      border: 1px solid #e2e8f0;
+      background-color: #f1f5f9; color: #2d3748; font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; resize: none; height: 75px; border: 1px solid #e2e8f0;
   }
 
-  /* Estats d'Error */
   input.error { border-color: var(--error-red); background-color: #fff5f5; }
-  
-  .error-msg { 
-      color: var(--error-red); 
-      font-size: 0.85em; 
-      margin-top: 8px; 
-      font-weight: 600; 
-      display: none; 
-  }
+  .error-msg { color: var(--error-red); font-size: 0.85em; margin-top: 8px; font-weight: 600; display: none; }
 
-  /* CHECKBOX I BASES */
   .bases-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 30px;
-      font-size: 0.9em;
-      background-color: #f8fafc;
-      padding: 15px;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 30px;
+      font-size: 0.9em; background-color: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;
   }
-  
-  input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary-color);
-      cursor: pointer;
-      margin-top: 3px;
-  }
-  
-  .btn-bases {
-      background: none; border: none; color: var(--primary-color); text-decoration: underline;
-      cursor: pointer; font-weight: 700; padding: 0; font-size: inherit;
-  }
+  input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; margin-top: 3px; }
+  .btn-bases { background: none; border: none; color: var(--primary-color); text-decoration: underline; cursor: pointer; font-weight: 700; padding: 0; font-size: inherit; }
 
-  /* BOTONS (Estil Corporatiu) */
   button[type="submit"], .btn-download, .btn-close-final {
-      width: 100%;
-      padding: 16px;
-      background: var(--primary-color); /* Color sòlid seriós */
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: background 0.3s ease;
+      width: 100%; padding: 16px; background: var(--primary-color); color: white;
+      border: none; border-radius: 8px; font-size: 16px; font-weight: 700;
+      cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: background 0.3s ease;
       display: flex; justify-content: center; align-items: center; gap: 10px;
   }
-
-  button[type="submit"]:hover {
-      background: #004a6b; /* Blau més fosc al hover */
-      transform: translateY(-1px);
-  }
-
-  button:disabled {
-      background: #cbd5e0;
-      color: #718096;
-      cursor: not-allowed;
-      transform: none;
-  }
+  button[type="submit"]:hover { background: #004a6b; transform: translateY(-1px); }
+  button:disabled { background: #cbd5e0; color: #718096; cursor: not-allowed; transform: none; }
 
   /* MODALS */
   .modal-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;
-      backdrop-filter: blur(4px);
+      background-color: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px);
   }
-
   .modal-content {
-      background: white;
-      width: 90%; max-width: 600px; max-height: 85vh;
-      border-radius: 12px;
-      display: flex; flex-direction: column;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      overflow: hidden;
+      background: white; width: 90%; max-width: 600px; max-height: 85vh;
+      border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden;
   }
-
-  .modal-header {
-      padding: 18px 25px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex; justify-content: space-between; align-items: center;
-      background: #f8fafc;
-  }
+  .modal-header { padding: 18px 25px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
   .modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--primary-color); }
-  
   .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #a0aec0; }
-  .close-btn:hover { color: var(--text-dark); }
-
   .modal-body { overflow-y: auto; padding: 30px; font-size: 0.95rem; line-height: 1.6; color: #2d3748; }
   .modal-footer { padding: 20px; border-top: 1px solid #e2e8f0; text-align: center; background: #fff; }
 
-  /* MODAL ÈXIT */
   .success-icon { font-size: 50px; margin-bottom: 15px; display: block; }
   .btn-download { background: var(--success-green); margin-bottom: 10px; }
   .btn-download:hover { background: #22543d; }
@@ -239,14 +212,8 @@
 
   #missatgeEstat { text-align: center; margin-top: 15px; font-weight: bold; padding: 15px; border-radius: 8px; }
 
-  /* HELPER PER AL PDF */
-  .clean-capture {
-      background: white !important;
-      box-shadow: none !important;
-      border: 1px solid #000 !important; 
-      border-radius: 0 !important;
-      padding: 20px !important;
-  }
+  /* PDF HELPER */
+  .clean-capture { background: white !important; box-shadow: none !important; border: 1px solid #000 !important; border-radius: 0 !important; padding: 20px !important; }
   .clean-capture .hide-in-pdf { display: none !important; }
 
   @media (max-width: 480px) {
@@ -293,6 +260,15 @@
     </form>
 </div>
 
+<div class="validated-section">
+    <div class="validated-header">Propostes Validades</div>
+    <div class="validated-disclaimer">Propostes validades amb supervisió prèvia.</div>
+    
+    <div id="validated-list">
+        <div class="empty-list">Carregant llista...</div>
+    </div>
+</div>
+
 <div id="modalBases" class="modal-overlay" onclick="tancarModal(event, 'modalBases')">
     <div class="modal-content">
         <div class="modal-header">
@@ -301,27 +277,18 @@
         </div>
         <div class="modal-body" id="text-bases-imprimir">
             <p><strong>BASES DEL CONCURS D'IDEES PER A LA DENOMINACIÓ DE LA PLATAFORMA D'INTEL·LIGÈNCIA ARTIFICIAL DEL COMÚ D'ENCAMP</strong></p>
-            
             <h3>1. OBJECTE DEL CONCURS</h3>
             <p>El Comú d'Encamp convoca un concurs d'idees intern amb l'objectiu de trobar un nom original, representatiu i amb sonoritat catalana per a la nova plataforma d'Intel·ligència Artificial de la corporació.</p>
-
             <h3>2. PARTICIPANTS</h3>
-            <p>El concurs és obert exclusivament a persones físiques que mantinguin una relació laboral activa amb el Comú d'Encamp i disposin de número de personal assignat. La participació és individual.</p>
-
-            <h3>3. REQUISITS DE LES PROPOSTES</h3>
-            <p><strong>Longitud:</strong> No podran excedir els 15 caràcters (espais inclosos).<br>
-            <strong>Contingut:</strong> Quedaran desqualificats els noms amb insults o paraules grolleres.<br>
-            <strong>Originalitat:</strong> El nom no pot estar registrat com a marca comercial.<br>
-            <strong>Unicitat:</strong> En cas de duplicitats, prevaldrà la proposta que hagi entrat primer al sistema.</p>
-
+            <p>El concurs és obert exclusivament a persones físiques que mantinguin una relació laboral activa amb el Comú d'Encamp i disposin de número de personal assignat.</p>
+            <h3>3. REQUISITS</h3>
+            <p>Longitud màxima 15 caràcters. Sense insults. Originalitat i sense drets de tercers.</p>
             <h3>4. MECÀNICA I ANONIMAT</h3>
-            <p>El procés serà anònim fins a l'adjudicació del premi. El sistema generarà un codi SHA-256 a partir de la contrasenya. És obligatori guardar la contrasenya per reclamar el premi.</p>
-
-            <h3>5. PREMI I LLIURAMENT</h3>
-            <p>S'estableix un únic premi consistent en un <strong>iPhone 17 Pro</strong>. El guanyador s'anunciarà al Sopar de Nadal. Per recollir el premi serà imprescindible facilitar la contrasenya de registre.</p>
-
+            <p>El procés serà anònim fins a l'adjudicació del premi. El sistema generarà un codi SHA-256 a partir de la contrasenya. És obligatori guardar la contrasenya.</p>
+            <h3>5. PREMI</h3>
+            <p>iPhone 17 Pro. El guanyador s'anunciarà al Sopar de Nadal.</p>
             <h3>6. PROPIETAT INTEL·LECTUAL</h3>
-            <p>La propietat intel·lectual i els drets d'ús del nom passaran a ser propietat exclusiva del Comú d'Encamp.</p>
+            <p>El nom passarà a ser propietat exclusiva del Comú d'Encamp.</p>
         </div>
     </div>
 </div>
@@ -345,7 +312,6 @@
             <button type="button" class="btn-download" onclick="descarregarPDFManual()">
                 📥 DESCARREGA EL REBUT PDF
             </button>
-            
             <button type="button" class="btn-close-final" onclick="location.reload()">
                 Tanca i torna a l'inici
             </button>
@@ -354,7 +320,7 @@
 </div>
 
 <script>
-  // --- URL GOOGLE APPS SCRIPT ---
+  // *** URL DEFINITIVA ***
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFqJ4_51A-g1qJCjluCYENoaFog2kyCoSODSosX2BoSpBg_EUZyPjKDYubwModo4Ag8A/exec"; 
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -367,7 +333,33 @@
       const missatge = document.getElementById('missatgeEstat');
       let pdfDocGlobal = null; 
 
-      // Botó estat
+      // 1. CARREGAR LLISTA VALIDADA
+      loadValidatedNames();
+
+      async function loadValidatedNames() {
+          const listContainer = document.getElementById('validated-list');
+          try {
+              const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=list&t=${Date.now()}`);
+              const data = await response.json();
+              
+              if (data.noms && data.noms.length > 0) {
+                  listContainer.innerHTML = ""; 
+                  data.noms.forEach(nom => {
+                      const tag = document.createElement("div");
+                      tag.className = "name-tag";
+                      tag.innerText = nom;
+                      listContainer.appendChild(tag);
+                  });
+              } else {
+                  listContainer.innerHTML = '<div class="empty-list">Encara no hi ha propostes validades visibles.</div>';
+              }
+          } catch (e) {
+              console.error("Error llista:", e);
+              listContainer.innerHTML = '<div class="empty-list">Llista actualitzant-se...</div>';
+          }
+      }
+
+      // 2. CONTROL UI
       checkBases.addEventListener('change', function() {
           if (this.checked) {
               btnEnviar.disabled = false;
@@ -378,12 +370,11 @@
           }
       });
 
-      // Restricció de caràcters
       inputNom.addEventListener('input', function() {
           this.value = this.value.replace(/[^a-zA-Z0-9\sàèòéíóúÀÈÒÉÍÓÚïüÏÜçÇ·'-]/g, '');
       });
 
-      // Hash SHA-256
+      // 3. HASH
       async function actualitzarHash() {
         const text = inputPass.value;
         if (!text) { outputHash.value = ""; return; }
@@ -395,7 +386,7 @@
       }
       inputPass.addEventListener('input', actualitzarHash);
 
-      // ENVIAR DADES
+      // 4. ENVIAMENT
       document.getElementById('formIA').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -407,10 +398,9 @@
         missatge.style.display = 'none';
 
         if (!codi) { 
-            missatge.innerText = "⚠️ Si us plau, escriu una contrasenya per generar el codi.";
+            missatge.innerText = "⚠️ Si us plau, escriu una contrasenya.";
             missatge.style.display = 'block';
             missatge.style.color = 'var(--error-red)';
-            missatge.style.backgroundColor = '#FED7D7';
             return; 
         }
 
@@ -418,10 +408,8 @@
         btnEnviar.innerText = "COMPROVANT EL NOM...";
         
         try {
-            const timestamp = Date.now();
-            
-            // 1. Check Duplicats
-            const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?check=${encodeURIComponent(nom)}&t=${timestamp}`);
+            // Check duplicats
+            const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?check=${encodeURIComponent(nom)}&t=${Date.now()}`);
             const checkResult = await checkResponse.json();
 
             if (checkResult.exists) {
@@ -432,9 +420,9 @@
                 return; 
             }
 
-            // 2. Guardar
+            // Save
             btnEnviar.innerText = "Guardant...";
-            const urlGuardar = `${GOOGLE_SCRIPT_URL}?nom=${encodeURIComponent(nom)}&codi=${encodeURIComponent(codi)}&t=${timestamp}`;
+            const urlGuardar = `${GOOGLE_SCRIPT_URL}?nom=${encodeURIComponent(nom)}&codi=${encodeURIComponent(codi)}&t=${Date.now()}`;
             const saveResponse = await fetch(urlGuardar);
             const saveResult = await saveResponse.json();
 
@@ -444,7 +432,7 @@
                 obrirModal('modalRebut');
                 btnEnviar.innerText = "ENVIAT";
             } else {
-                throw new Error(saveResult.message || "Error al guardar");
+                throw new Error(saveResult.message || "Error");
             }
 
         } catch (error) {
@@ -452,14 +440,13 @@
             missatge.innerText = "❌ Error de connexió, torna-ho a intentar";
             missatge.style.display = 'block';
             missatge.style.color = 'var(--error-red)';
-            missatge.style.backgroundColor = '#FED7D7';
             btnEnviar.disabled = false;
             btnEnviar.innerText = "Tornar a intentar";
         }
       });
   });
 
-  // --- GENERADOR DE PDF ---
+  // 5. PDF GENERATOR
   function getBase64Image(img) {
     var canvas = document.createElement("canvas");
     canvas.width = img.naturalWidth;
@@ -471,72 +458,57 @@
 
   async function prepararPDF() {
     const { jsPDF } = window.jspdf;
-    
     const elementFormulari = document.getElementById('targeta-formulari');
     
-    // APLICAR ESTIL NET (Fons blanc) per a la foto
     elementFormulari.classList.add('clean-capture');
-    
-    // Capturar
-    const canvas = await html2canvas(elementFormulari, { 
-        scale: 2,
-        backgroundColor: "#ffffff" 
-    }); 
+    const canvas = await html2canvas(elementFormulari, { scale: 2, backgroundColor: "#ffffff" }); 
     const imgFormulari = canvas.toDataURL('image/png');
-    
-    // TREURE ESTIL NET 
     elementFormulari.classList.remove('clean-capture');
 
-    // NOMÉS IMATGE IA
     const elLogoIA = document.getElementById('imgLogoIA');
     const imgLogoIA = (elLogoIA.complete) ? getBase64Image(elLogoIA) : null;
 
     const doc = new jsPDF('p', 'mm', 'a4');
     pdfDocGlobal = doc;
-    
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 20;
     const contentWidth = pageWidth - (margin * 2);
 
-    // PÀGINA 1
-    // Logo IA Centrat al PDF (Mida 40mm)
+    // PDF CONTENT
     if (imgLogoIA) {
-        const logoW = 40;
+        const logoW = 35;
         const logoX = (pageWidth - logoW) / 2;
         doc.addImage(imgLogoIA, 'PNG', logoX, 10, logoW, logoW);
     }
 
     doc.setFontSize(18);
     doc.setTextColor(0, 95, 133);
-    doc.text("REBUT DE REGISTRE", pageWidth / 2, 60, { align: 'center' });
+    doc.text("REBUT DE REGISTRE", pageWidth / 2, 55, { align: 'center' });
 
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setTextColor(220, 53, 69);
     const avisText = "Guarda aquest rebut i no el comparteixis és una prova de la teva participació";
-    doc.text(avisText, pageWidth / 2, 70, { align: 'center', maxWidth: 160 });
+    doc.text(avisText, pageWidth / 2, 63, { align: 'center', maxWidth: 160 });
 
     const imgProps = doc.getImageProperties(imgFormulari);
     const pdfImgHeight = (imgProps.height * contentWidth) / imgProps.width;
-    doc.addImage(imgFormulari, 'PNG', margin, 80, contentWidth, pdfImgHeight);
+    doc.addImage(imgFormulari, 'PNG', margin, 70, contentWidth, pdfImgHeight);
 
-    let yPos = 80 + pdfImgHeight + 15;
+    let yPos = 70 + pdfImgHeight + 10;
     doc.setDrawColor(200);
     doc.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += 10;
+    yPos += 8;
 
-    // TEXT BASES
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
     doc.text("BASES DEL CONCURS:", margin, yPos);
-    yPos += 8;
+    yPos += 6;
 
     doc.setFontSize(10);
     doc.setTextColor(80);
-
     const textBases = document.getElementById('text-bases-imprimir').innerText;
     const lines = doc.splitTextToSize(textBases, contentWidth);
-    const lineHeight = 6; 
     
     for (let i = 0; i < lines.length; i++) {
         if (yPos > pageHeight - 20) {
@@ -544,35 +516,20 @@
             yPos = 20; 
         }
         doc.text(lines[i], margin, yPos);
-        yPos += lineHeight;
+        yPos += 5;
     }
   }
 
   function descarregarPDFManual() {
-      if (pdfDocGlobal) {
-          pdfDocGlobal.save("Rebut-Concurs-IA.pdf");
-      } else {
-          const msg = document.getElementById('missatgeEstat');
-          msg.innerText = "⚠️ Error al generar el PDF. Torna a intentar-ho.";
-          msg.style.display = 'block';
-      }
+      if (pdfDocGlobal) pdfDocGlobal.save("Rebut-Concurs-IA.pdf");
+      else alert("Error generant PDF.");
   }
 
-  // Funcions Modal
-  window.obrirModal = function(id) { 
-      document.getElementById(id).style.display = 'flex'; 
-      document.body.style.overflow = 'hidden'; 
-  }
-  window.tancarModalBoto = function(id) { 
-      document.getElementById(id).style.display = 'none'; 
-      document.body.style.overflow = 'auto'; 
-  }
-  window.tancarModal = function(e, id) { 
-      if (id === 'modalRebut') return; 
-      if (e.target.id === id) tancarModalBoto(id); 
-  }
+  // MODAL HELPERS
+  window.obrirModal = function(id) { document.getElementById(id).style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+  window.tancarModalBoto = function(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
+  window.tancarModal = function(e, id) { if (id === 'modalRebut') return; if (e.target.id === id) tancarModalBoto(id); }
   window.descarregarPDFManual = descarregarPDFManual;
-
 </script>
 
 </body>
