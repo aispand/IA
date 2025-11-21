@@ -33,7 +33,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* justify-content: center; tret per permetre scroll */
   }
 
   /* CAPÇALERA LOGO */
@@ -81,18 +80,11 @@
 
   .validated-header {
       font-size: 0.9rem;
-      font-weight: 700;
+      font-weight: 800; /* Més gruixut per destacar */
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-light);
-      margin-bottom: 5px;
-  }
-
-  .validated-disclaimer {
-      font-size: 0.8rem;
-      color: #718096;
-      font-style: italic;
-      margin-bottom: 25px;
+      margin-bottom: 20px; /* Més espai a sota ja que no hi ha subtítol */
   }
 
   /* Grid de noms */
@@ -261,8 +253,7 @@
 </div>
 
 <div class="validated-section">
-    <div class="validated-header">Propostes Validades</div>
-    <div class="validated-disclaimer">Propostes validades amb supervisió prèvia.</div>
+    <div class="validated-header">PROPOSTES VALIDADES AMB SUPERVISIÓ PRÈVIA</div>
     
     <div id="validated-list">
         <div class="empty-list">Carregant llista...</div>
