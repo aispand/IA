@@ -164,17 +164,17 @@
 
 <div class="main-card" id="targeta-formulari">
     <h1>Posa nom a la IA</h1>
-    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú.</p>
+    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú d'Encamp.</p>
 
     <form id="formIA">
         <div class="camp">
-            <label for="nom_ia">La teva proposta de nom (Màx 15 caràcters, sense símbols)</label>
+            <label for="nom_ia">Escriu la teva proposta de nom (Màx. 15 caràcters, sense símbols)</label>
             <input type="text" id="nom_ia" name="nom_ia" placeholder="Ex: EncampBot..." required autocomplete="off" maxlength="15">
             <div id="errorNom" class="error-msg">⚠️ Aquest nom ja s'ha proposat! Si us plau, tria'n un altre.</div>
         </div>
 
         <div class="camp">
-            <label for="input_password">Contrasenya privada (per generar el codi)</label>
+            <label for="input_password">Inventat una contrasenya privada (per generar el codi)</label>
             <input type="text" id="input_password" name="input_password" placeholder="Escriu una paraula clau..." required autocomplete="off">
         </div>
 
@@ -233,19 +233,19 @@
         </div>
         <div class="modal-body" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <span class="success-icon">🎉</span>
-            <p style="font-size: 1.1em; font-weight: bold;">La teva proposta s'ha registrat!</p>
+            <p style="font-size: 1.1em; font-weight: bold;">La teva proposta s'ha enregistrat!</p>
             <p>S'ha generat un document PDF com a justificant.</p>
             <p style="font-size: 0.9em; color: #e53e3e; margin-top: 15px; font-weight: bold;">
-                ⚠️ Important: Descarrega'l i guarda'l. És la teva única prova de participació.
+                ⚠️ Important: Descarrega'l i guarda'l. És una prova de teva participació.
             </p>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn-download" onclick="descarregarPDFManual()">
-                📥 DESCARREGAR REBUT PDF
+                📥 DESCARREGA EL REBUT PDF
             </button>
             
             <button type="button" class="btn-close-final" onclick="location.reload()">
-                Tancar i tornar a l'inici
+                Tanca i torna a l'inici
             </button>
         </div>
     </div>
@@ -270,14 +270,14 @@
       checkBases.addEventListener('change', function() {
           if (this.checked) {
               btnEnviar.disabled = false;
-              btnEnviar.innerText = "ENVIAR PROPOSTA";
+              btnEnviar.innerText = "ENVIA PROPOSTA";
           } else {
               btnEnviar.disabled = true;
               btnEnviar.innerText = "⚠️ Accepta les bases per enviar";
           }
       });
 
-      // --- 3. Restricció de Caràcters (Lletres, números i espais) ---
+      // --- 3. Restricció de Caràcters ---
       inputNom.addEventListener('input', function() {
           this.value = this.value.replace(/[^a-zA-Z0-9\sàèòéíóúÀÈÒÉÍÓÚïüÏÜçÇ·'-]/g, '');
       });
@@ -301,7 +301,6 @@
         const nom = inputNom.value.trim();
         const codi = outputHash.value;
         
-        // Reset UI
         inputNom.classList.remove('error');
         errorNom.style.display = 'none';
         missatge.style.display = 'none';
@@ -315,7 +314,7 @@
         }
 
         btnEnviar.disabled = true;
-        btnEnviar.innerText = "Comprovant nom...";
+        btnEnviar.innerText = "COMPROVANT EL NOM...";
         
         try {
             const timestamp = Date.now();
@@ -328,11 +327,11 @@
                 inputNom.classList.add('error');
                 errorNom.style.display = 'block';
                 btnEnviar.disabled = false;
-                btnEnviar.innerText = "ENVIAR PROPOSTA";
+                btnEnviar.innerText = "ENVIA PROPOSTA";
                 return; 
             }
 
-            // 2. Guardar (GET/POST)
+            // 2. Guardar
             btnEnviar.innerText = "Guardant...";
             const urlGuardar = `${GOOGLE_SCRIPT_URL}?nom=${encodeURIComponent(nom)}&codi=${encodeURIComponent(codi)}&t=${timestamp}`;
             const saveResponse = await fetch(urlGuardar);
@@ -349,7 +348,6 @@
 
         } catch (error) {
             console.error(error);
-            // AQUI EL CANVI SOL·LICITAT:
             missatge.innerText = "❌ Error de connexió, torna-ho a intentar";
             missatge.style.display = 'block';
             missatge.style.color = 'var(--error-red)';
@@ -416,7 +414,7 @@
     // TEXT BASES
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
-    doc.text("RESUM DE LES BASES:", margin, yPos);
+    doc.text("BASES DEL CONCURS:", margin, yPos);
     yPos += 6;
 
     doc.setFontSize(9);
