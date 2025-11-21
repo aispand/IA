@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Concurs: Posa nom a la IA d'Encamp</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
       --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       --text-dark: #2d3748;
-      --text-light: #718096;
       --bg-color: #f7fafc;
       --card-bg: #ffffff;
       --encamp-blue: #005f85; 
-      --disabled-bg: #e2e8f0;
-      --disabled-text: #a0aec0;
+      --error-red: #e53e3e;
   }
 
   body {
@@ -31,33 +33,32 @@
       align-items: center;
   }
 
-  /* --- CAPÇALERA I LOGOS --- */
+  /* CAPÇALERA */
   header {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 50px;
+      gap: 40px;
       margin-bottom: 30px;
       flex-wrap: wrap;
       width: 100%;
       max-width: 800px;
   }
-
   .logo-comu { height: 80px; object-fit: contain; }
-  .logo-ia {
-      height: 140px; 
+  .logo-ia { 
+      height: 120px; 
       object-fit: contain;
-      filter: drop-shadow(0 4px 8px rgba(118, 75, 162, 0.4));
+      filter: drop-shadow(0 4px 6px rgba(118, 75, 162, 0.3));
       animation: float 6s ease-in-out infinite;
   }
 
   @keyframes float {
       0% { transform: translateY(0px); }
-      50% { transform: translateY(-12px); }
+      50% { transform: translateY(-10px); }
       100% { transform: translateY(0px); }
   }
 
-  /* --- CONTENIDOR PRINCIPAL --- */
+  /* TARGETA PRINCIPAL */
   .main-card {
       background: var(--card-bg);
       width: 100%;
@@ -67,524 +68,416 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.1);
       position: relative;
   }
-
   .main-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 6px;
-      background: var(--primary-gradient);
-      border-radius: 20px 20px 0 0;
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      background: var(--primary-gradient); border-radius: 20px 20px 0 0;
   }
 
-  h1 {
-      text-align: center;
-      color: var(--encamp-blue);
-      margin-bottom: 10px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      font-size: 1.8rem;
-  }
+  h1 { text-align: center; color: var(--encamp-blue); margin-bottom: 10px; font-weight: 800; }
+  p.subtitle { text-align: center; color: #718096; margin-bottom: 30px; font-size: 0.9em; }
 
-  p.subtitle {
-      text-align: center;
-      color: var(--text-light);
-      margin-bottom: 30px;
-      font-size: 0.95em;
-      line-height: 1.5;
-  }
-
-  /* --- FORMULARI --- */
+  /* FORMULARI */
   .camp { margin-bottom: 20px; }
+  label { font-size: 0.9em; font-weight: 600; display: block; margin-bottom: 8px; color: var(--text-dark); }
   
-  label {
-      font-size: 0.9em;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 8px;
-      display: block;
-  }
-
   input[type="text"], textarea {
-      width: 100%;
-      padding: 15px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      box-sizing: border-box;
-      font-family: 'Montserrat', sans-serif;
+      width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px;
+      font-size: 16px; box-sizing: border-box; font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s;
   }
+  input:focus, textarea:focus { border-color: #764ba2; outline: none; box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1); }
 
-  input:focus, textarea:focus {
-      border-color: #764ba2;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
-  }
+  /* Estats d'Error */
+  input.error { border-color: var(--error-red); background-color: #fff5f5; }
+  .error-msg { color: var(--error-red); font-size: 0.85em; margin-top: 5px; display: none; font-weight: bold; }
 
   textarea#codi_generat {
-      background-color: #f8f9fa;
-      color: #4a5568;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 13px;
-      resize: none;
-      height: 70px;
-      border: 1px dashed #cbd5e0;
+      background-color: #f8f9fa; color: #4a5568; font-family: 'Roboto Mono', monospace;
+      font-size: 13px; resize: none; height: 70px; border: 1px dashed #cbd5e0;
   }
 
-  /* --- CHECKBOX I BASES --- */
+  /* CHECKBOX I BASES */
   .bases-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-      font-size: 0.95em;
-      background-color: #f8fafc;
-      padding: 15px;
-      border-radius: 10px;
+      display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+      font-size: 0.9em; background-color: #f8fafc; padding: 15px; border-radius: 10px;
       border: 1px solid #e2e8f0;
-      transition: border-color 0.3s;
   }
-
-  .bases-container:hover {
-      border-color: #cbd5e0;
-  }
-
-  input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
-      cursor: pointer;
-      accent-color: #764ba2;
-      margin: 0;
-  }
-
+  input[type="checkbox"] { width: 20px; height: 20px; accent-color: #764ba2; cursor: pointer; }
+  
   .btn-bases {
-      background: none;
-      border: none;
-      color: #667eea;
-      text-decoration: underline;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: inherit;
-      padding: 0;
+      background: none; border: none; color: #667eea; text-decoration: underline;
+      cursor: pointer; font-weight: bold; padding: 0; font-size: inherit;
   }
   .btn-bases:hover { color: #764ba2; }
 
-  /* --- BOTÓ ENVIAR --- */
-  button[type="submit"] {
-      width: 100%;
-      padding: 18px;
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+  /* BOTÓ */
+  button[type="submit"], .btn-download {
+      width: 100%; padding: 18px; background: var(--primary-gradient); color: white;
+      border: none; border-radius: 12px; font-size: 18px; font-weight: 700;
+      cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+  }
+  button[type="submit"]:hover, .btn-download:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3); }
+  button:disabled { 
+      background: #cbd5e0; cursor: not-allowed; color: #a0aec0; 
+      transform: none; box-shadow: none; font-size: 16px;
   }
 
-  button[type="submit"]:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
-  }
-
-  /* ESTIL DESACTIVAT (Defecte) */
-  button[type="submit"]:disabled {
-      background: var(--disabled-bg);
-      color: var(--disabled-text);
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-      font-size: 16px;
-  }
-
-  /* --- POPUP DE LES BASES (MODAL) --- */
+  /* MODALS (Finestra emergent) */
   .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center;
       backdrop-filter: blur(5px);
   }
-
   .modal-content {
-      background: white;
-      width: 100%;
-      max-width: 700px;
-      max-height: 85vh;
-      border-radius: 15px;
+      background: white; width: 95%; max-width: 700px; max-height: 90vh;
+      border-radius: 15px; display: flex; flex-direction: column; position: relative;
       box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      animation: slideIn 0.3s ease;
   }
   
-  @keyframes slideIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-  }
-
+  /* Capçalera del modal */
   .modal-header {
-      padding: 20px 25px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8fafc;
-      border-radius: 15px 15px 0 0;
+      padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-radius: 15px 15px 0 0;
+  }
+  .modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--encamp-blue); }
+  .close-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: #718096; line-height: 1; }
+
+  /* Cos del modal */
+  .modal-body { overflow-y: auto; padding: 20px; font-size: 0.9rem; line-height: 1.6; color: #4a5568; flex-grow: 1; }
+
+  /* Estils específics per al modal de Rebut PDF */
+  .pdf-preview-container {
+      width: 100%; height: 400px; border: 1px solid #e2e8f0; background: #525659;
+      margin-bottom: 15px; border-radius: 8px;
+  }
+  iframe#pdfFrame { width: 100%; height: 100%; border: none; }
+
+  .modal-footer {
+      padding: 20px; border-top: 1px solid #e2e8f0; text-align: center;
   }
 
-  .modal-header h2 { margin: 0; font-size: 1.2rem; color: var(--encamp-blue); }
-
-  .close-btn {
-      background: none;
-      border: none;
-      font-size: 28px;
-      cursor: pointer;
-      color: #718096;
-      line-height: 1;
-  }
-
-  .modal-body {
-      padding: 25px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      text-align: left;
-      color: #4a5568;
-  }
-
-  .modal-body h3 { color: var(--encamp-blue); margin-top: 25px; border-bottom: 2px solid #edf2f7; padding-bottom: 5px; }
-  .modal-body ul { padding-left: 20px; margin-bottom: 15px; }
-  .modal-body li { margin-bottom: 8px; }
-
-  /* --- AVISOS --- */
-  .avis-box {
-      background-color: #fff8e1;
-      border-left: 4px solid #ecc94b;
-      padding: 15px;
-      margin-bottom: 25px;
-      border-radius: 6px;
-      font-size: 0.85em;
-      color: #744210;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      line-height: 1.4;
-  }
-
-  .feed-propostes {
-      margin-top: 40px;
-      text-align: center;
-      width: 100%;
-      max-width: 600px;
-      margin-bottom: 60px;
-  }
-
-  #llista-noms {
-      font-size: 1.2em;
-      color: var(--encamp-blue);
-      font-weight: 600;
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-      display: block; 
-      word-wrap: break-word;
-  }
-  
-  .separador { color: #cbd5e0; margin: 0 5px; }
-
-  #missatgeEstat {
-      text-align: center;
-      margin-top: 15px;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 8px;
-  }
+  #missatgeEstat { text-align: center; margin-top: 15px; font-weight: bold; padding: 15px; border-radius: 8px; }
 
   /* Mobile tweaks */
   @media (max-width: 480px) {
-      header { gap: 20px; flex-direction: row; }
+      header { gap: 20px; }
       .logo-comu { height: 50px; }
       .logo-ia { height: 90px; }
       .main-card { padding: 25px; }
-      h1 { font-size: 1.5em; }
-      .modal-content { max-height: 90vh; width: 95%; margin: auto; }
-      .bases-container { flex-direction: row; align-items: flex-start; }
-      input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; }
+      .modal-content { max-height: 95vh; }
+      .pdf-preview-container { height: 300px; }
   }
 </style>
 </head>
 <body>
 
-  <header>
-      <img src="logoCE.png" alt="Comú d'Encamp" class="logo-comu">
-      <img src="logoIA.png" alt="Logo IA" class="logo-ia">
-  </header>
+<header>
+    <img src="logoCE.png" alt="Comú d'Encamp" class="logo-comu" id="imgLogoCE">
+    <img src="logoIA.png" alt="Logo IA" class="logo-ia" id="imgLogoIA">
+</header>
 
-  <div class="main-card">
-      <h1>Posa nom a la IA</h1>
-      <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú. <br>La teva proposta quedarà registrada i segellada.</p>
+<div class="main-card" id="targeta-formulari">
+    <h1>Posa nom a la IA</h1>
+    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú.</p>
 
-      <div class="avis-box">
-          <span>📸 <strong>Recorda:</strong> Fes una captura de pantalla abans de sortir. Aquest serà el teu justificant de participació.</span>
-      </div>
+    <form id="formIA">
+        <div class="camp">
+            <label for="nom_ia">La teva proposta de nom (Màx 15 caràcters)</label>
+            <input type="text" id="nom_ia" name="nom_ia" placeholder="Ex: EncampBot..." required autocomplete="off" maxlength="15">
+            <div id="errorNom" class="error-msg">⚠️ Aquest nom ja s'ha proposat! Si us plau, tria'n un altre.</div>
+        </div>
 
-      <form id="formIA">
-          <div class="camp">
-              <label for="nom_ia">La teva proposta de nom (Màx 15 caràcters)</label>
-              <input type="text" id="nom_ia" name="nom_ia" placeholder="Ex: EncampBot, Valira..." required autocomplete="off" maxlength="15">
-          </div>
+        <div class="camp">
+            <label for="input_password">Contrasenya privada (per generar el codi)</label>
+            <input type="text" id="input_password" name="input_password" placeholder="Escriu una paraula clau..." required autocomplete="off">
+        </div>
 
-          <div class="camp">
-              <label for="input_password">Contrasenya privada (per generar el codi)</label>
-              <input type="text" id="input_password" name="input_password" placeholder="Escriu una paraula clau..." required autocomplete="off">
-          </div>
+        <div class="camp">
+            <label for="codi_generat">Codi de seguretat únic (Hash SHA-256)</label>
+            <textarea id="codi_generat" name="codi_generat" readonly placeholder="El codi apareixerà aquí..."></textarea>
+        </div>
 
-          <div class="camp">
-              <label for="codi_generat">Codi de seguretat únic (Hash SHA-256)</label>
-              <textarea id="codi_generat" name="codi_generat" readonly placeholder="El codi apareixerà aquí automàticament..."></textarea>
-          </div>
+        <div class="bases-container">
+            <input type="checkbox" id="accepto_bases" name="accepto_bases">
+            <label for="accepto_bases">He llegit i accepto les <button type="button" class="btn-bases" onclick="obrirModal('modalBases')">bases del concurs</button>.</label>
+        </div>
 
-          <div class="bases-container">
-              <input type="checkbox" id="accepto_bases" name="accepto_bases">
-              <label for="accepto_bases">
-                  He llegit i accepto les <button type="button" class="btn-bases" onclick="obrirModal()">bases del concurs</button>.
-              </label>
-          </div>
+        <button type="submit" id="btnEnviar" disabled>⚠️ Accepta les bases per enviar</button>
+        <div id="missatgeEstat" style="display:none;"></div>
+    </form>
+</div>
 
-          <button type="submit" id="btnEnviar" disabled>⚠️ Primer has d'acceptar les bases</button>
-          
-          <div id="missatgeEstat" style="display:none;"></div>
-      </form>
-  </div>
+<div id="modalBases" class="modal-overlay" onclick="tancarModal(event, 'modalBases')">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Bases del Concurs</h2>
+            <button class="close-btn" onclick="tancarModalBoto('modalBases')">&times;</button>
+        </div>
+        <div class="modal-body" id="text-bases-imprimir">
+            <p><strong>BASES DEL CONCURS D'IDEES PER A LA DENOMINACIÓ DE LA PLATAFORMA D'INTEL·LIGÈNCIA ARTIFICIAL DEL COMÚ D'ENCAMP</strong></p>
+            
+            <h3>1. OBJECTE DEL CONCURS</h3>
+            <p>El Comú d'Encamp convoca un concurs d'idees intern amb l'objectiu de trobar un nom original, representatiu i amb sonoritat catalana per a la nova plataforma d'Intel·ligència Artificial de la corporació.</p>
 
-  <div class="feed-propostes">
-      <div style="font-size: 0.8em; text-transform: uppercase; color: #a0aec0; letter-spacing: 2px; margin-bottom: 10px; font-weight: 700;">Propostes destacades</div>
-      <div id="llista-noms">
-          <span style="color: #cbd5e0; font-size: 0.8em;">Carregant propostes...</span>
-      </div>
-  </div>
+            <h3>2. PARTICIPANTS</h3>
+            <p>El concurs és obert exclusivament a persones físiques que mantinguin una relació laboral activa amb el Comú d'Encamp i disposin de número de personal assignat. La participació és individual.</p>
 
-  <div id="modalBases" class="modal-overlay" onclick="tancarModal(event)">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h2>Bases del Concurs</h2>
-              <button class="close-btn" onclick="tancarModalBoto()">&times;</button>
-          </div>
-          <div class="modal-body">
-              <p><strong>BASES DEL CONCURS D'IDEES PER A LA DENOMINACIÓ DE LA PLATAFORMA D'INTEL·LIGÈNCIA ARTIFICIAL DEL COMÚ D'ENCAMP</strong></p>
-              
-              <h3>1. OBJECTE DEL CONCURS</h3>
-              <p>El Comú d'Encamp convoca un concurs d'idees intern amb l'objectiu de trobar un nom original, representatiu i amb sonoritat catalana per a la nova plataforma d'Intel·ligència Artificial de la corporació.</p>
+            <h3>3. REQUISITS DE LES PROPOSTES</h3>
+            <p><strong>Longitud:</strong> No podran excedir els 15 caràcters (espais inclosos).<br>
+            <strong>Contingut:</strong> Quedaran desqualificats els noms amb insults o paraules grolleres.<br>
+            <strong>Originalitat:</strong> El nom no pot estar registrat com a marca comercial.<br>
+            <strong>Unicitat:</strong> En cas de duplicitats, prevaldrà la proposta que hagi entrat primer al sistema.</p>
 
-              <h3>2. PARTICIPANTS</h3>
-              <ul>
-                  <li>El concurs és obert exclusivament a <strong>persones físiques</strong> que mantinguin una relació laboral activa amb el Comú d'Encamp i disposin de número de personal assignat.</li>
-                  <li>La participació és <strong>individual</strong>.</li>
-              </ul>
+            <h3>4. MECÀNICA I ANONIMAT</h3>
+            <p>El procés serà anònim fins a l'adjudicació del premi. El sistema generarà un codi SHA-256 a partir de la contrasenya. És obligatori guardar la contrasenya per reclamar el premi.</p>
 
-              <h3>3. REQUISITS DE LES PROPOSTES (NOMS)</h3>
-              <ul>
-                  <li><strong>Longitud:</strong> No podran excedir els <strong>15 caràcters</strong> (espais inclosos).</li>
-                  <li><strong>Contingut:</strong> Quedaran automàticament desqualificats els noms que continguin insults, paraules grolleres, discriminatòries o que atemptin contra la imatge del Comú.</li>
-                  <li><strong>Llengua:</strong> Es valorarà positivament que el nom tingui <strong>sonoritat catalana</strong>.</li>
-                  <li><strong>Originalitat i Registre:</strong> El nom no pot estar registrat prèviament com a marca comercial. Si es detecta que el nom ja té drets d'autor vigents per tercers, serà desqualificat.</li>
-                  <li><strong>Unicitat:</strong> No s'acceptaran noms repetits dins del concurs. En cas de duplicitats, prevaldrà la proposta que hagi entrat primer al sistema (data i hora del registre).</li>
-              </ul>
+            <h3>5. PREMI I LLIURAMENT</h3>
+            <p>S'estableix un únic premi consistent en un <strong>iPhone 17 Pro</strong>. El guanyador s'anunciarà al Sopar de Nadal. Per recollir el premi serà imprescindible facilitar la contrasenya de registre.</p>
 
-              <h3>4. MECÀNICA DE PARTICIPACIÓ I ANONIMAT</h3>
-              <p>Per tal de garantir la imparcialitat en la selecció inicial, el procés serà anònim fins al moment de l'adjudicació del premi.</p>
-              <ul>
-                  <li><strong>Enviament:</strong> Les propostes s'enviaran a través de la pàgina habilitada a la Intranet del Comú.</li>
-                  <li><strong>Sistema de Seguretat (HASH):</strong> 
-                      <br>- El participant introduirà el Nom Proposat i una Contrasenya personal (aquesta contrasenya NO s'envia al servidor).
-                      <br>- El sistema generarà automàticament un codi xifrat únic (SHA-256) a partir de la contrasenya.
-                      <br>- El formulari enviarà únicament: El Nom Proposat + El Codi SHA-256.
-                  </li>
-                  <li><strong>Responsabilitat del participant:</strong>
-                      <br>- És <strong>obligatori</strong> que el participant faci una captura de pantalla o guardi la contrasenya utilitzada.
-                      <br>- El Comú d'Encamp no té accés a la contrasenya. Si el participant la perd, no podrà demostrar l'autoria del nom i perdrà el dret al premi.
-                  </li>
-              </ul>
+            <h3>6. PROPIETAT INTEL·LECTUAL</h3>
+            <p>La propietat intel·lectual i els drets d'ús del nom passaran a ser propietat exclusiva del Comú d'Encamp.</p>
+        </div>
+    </div>
+</div>
 
-              <h3>5. PUBLICITAT DE LES PROPOSTES</h3>
-              <p>Diàriament, s'actualitzarà a la Intranet un llistat públic amb els noms rebuts i acceptats, per tal que els participants puguin verificar que la seva proposta ha estat registrada i que no hi hagi duplicitats futures.</p>
+<div id="modalRebut" class="modal-overlay">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header" style="background: #C6F6D5;">
+            <h2 style="color: #276749;">✅ Registre completat!</h2>
+        </div>
+        <div class="modal-body" style="text-align: center;">
+            <p style="margin-bottom: 20px; font-size: 1.1em;">
+                Hem generat el teu justificant de participació.
+            </p>
+            
+            <div class="pdf-preview-container">
+                <iframe id="pdfFrame"></iframe>
+            </div>
 
-              <h3>6. CALENDARI</h3>
-              <ul>
-                  <li><strong>Inici de propostes:</strong> 28 de novembre de 2025.</li>
-                  <li><strong>Tancament de propostes:</strong> 05 de desembre de 2025 (a les 23:59h).</li>
-                  <li><strong>Selecció dels finalistes (Directors):</strong> 09 de desembre de 2025.</li>
-                  <li><strong>Votació popular (Treballadors):</strong> Del 10 al 17 de desembre de 2025 (tancament a les 12:00h).</li>
-                  <li><strong>Anunci del guanyador:</strong> 18 de desembre de 2025 (Sopar de Nadal).</li>
-              </ul>
-
-              <h3>7. SISTEMA DE JURAT I VOTACIÓ</h3>
-              <p>El procés de selecció constarà de dues fases:</p>
-              <ul>
-                  <li><strong>Fase 1: Selecció Tècnica.</strong> Un jurat format pels Directors del Comú d'Encamp avaluarà totes les propostes vàlides el dia 9 de desembre de 2025. Seleccionaran els 10 millors noms.</li>
-                  <li><strong>Fase 2: Votació Popular.</strong> Els 10 noms finalistes se sotmetran a votació de tots els treballadors del Comú mitjançant un formulari de Microsoft Forms. El nom més votat serà el guanyador.</li>
-              </ul>
-
-              <h3>8. PREMI I LLIURAMENT</h3>
-              <ul>
-                  <li>S'estableix un únic premi consistent en un <strong>iPhone 17 Pro</strong>.</li>
-                  <li>El guanyador/a es donarà a conèixer durant el Sopar de Nadal del Comú d'Encamp, el dia 18 de desembre de 2025.</li>
-                  <li><strong>Reclamació del premi:</strong> Durant l'acte, l'autor haurà d'identificar-se i facilitar la contrasenya utilitzada en el registre per verificar el codi SHA-256. Si no pot acreditar la contrasenya, el premi passarà a la segona proposta més votada.</li>
-              </ul>
-
-              <h3>9. PROPIETAT INTEL·LECTUAL</h3>
-              <ul>
-                  <li>La participació en el concurs implica l'acceptació d'aquestes bases.</li>
-                  <li>Tot i que es reconeixerà públicament l'autoria, <strong>la propietat intel·lectual, els drets d'explotació i l'ús del nom passaran a ser propietat exclusiva del Comú d'Encamp</strong>, que podrà registrar-lo o modificar-lo sense cap contraprestació addicional al premi lliurat.</li>
-              </ul>
-          </div>
-      </div>
-  </div>
+            <p style="font-size: 0.9em; color: #e53e3e; font-weight: bold;">
+                ⚠️ Important: Guarda aquest fitxer, és la teva única prova.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-download" onclick="descarregarPDFManual()">
+                📥 Guardar Rebut PDF
+            </button>
+            <div style="margin-top: 10px;">
+                 <a href="#" onclick="location.reload()" style="color: #718096; font-size: 0.9em;">Tancar i tornar a l'inici</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-  // URL del Power Automate
-  const ENDPOINT_URL = "https://default3913d1da1a21459da5e88b165cdb91.34.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/04e21528bbad48038b04aeefb0060abd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=7r-gwYSwI7QTSj_hs5QexySI_q36US3dLXtrrH758rg"; 
+  // *** URL DEL GOOGLE APPS SCRIPT (NO TOQUIS RES AQUÍ) ***
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFqJ4_51A-g1qJCjluCYENoaFog2kyCoSODSosX2BoSpBg_EUZyPjKDYubwModo4Ag8A/exec"; 
 
-  // --- CONTROL DEL BOTÓ ENVIAR ---
+  // --- 1. Variables Globals ---
   const checkBases = document.getElementById('accepto_bases');
   const btnEnviar = document.getElementById('btnEnviar');
+  const inputNom = document.getElementById('nom_ia');
+  const errorNom = document.getElementById('errorNom');
+  let pdfBlobGlobal = null;
 
+  // --- 2. Control Botó Enviar ---
   checkBases.addEventListener('change', function() {
       if (this.checked) {
-          // Si marca la casella: ACTIVEJO EL BOTÓ
           btnEnviar.disabled = false;
           btnEnviar.innerText = "ENVIAR PROPOSTA";
       } else {
-          // Si desmarca: BLOQUEJO EL BOTÓ
           btnEnviar.disabled = true;
-          btnEnviar.innerText = "⚠️ Primer has d'acceptar les bases";
+          btnEnviar.innerText = "⚠️ Accepta les bases per enviar";
       }
   });
 
-  // --- CONTROL DEL MODAL (POPUP) ---
-  function obrirModal() {
-      document.getElementById('modalBases').style.display = 'flex';
-      document.body.style.overflow = 'hidden'; 
-  }
-
-  function tancarModalBoto() {
-      document.getElementById('modalBases').style.display = 'none';
-      document.body.style.overflow = 'auto';
-  }
-
-  function tancarModal(e) {
-      if (e.target.id === 'modalBases') {
-          tancarModalBoto();
-      }
-  }
-
-  // --- CÀRREGA DE NOMS VALIDATS ---
-  document.addEventListener("DOMContentLoaded", function() {
-      fetch('nomsok.html')
-          .then(response => {
-              if (!response.ok) throw new Error("No s'ha trobat l'arxiu");
-              return response.text();
-          })
-          .then(html => {
-              const llista = document.getElementById('llista-noms');
-              if (html.trim().length > 0) llista.innerHTML = html;
-              else llista.innerHTML = '<span style="color: #cbd5e0;">Encara no hi ha propostes validades.</span>';
-          })
-          .catch(err => {
-              console.log("Info: executant sense servidor o sense fitxer.", err);
-              document.getElementById('llista-noms').innerHTML = '<span style="color: #cbd5e0;">Propostes pendents de validació.</span>';
-          });
-  });
-
-  // --- Generació automàtica del Hash ---
+  // --- 3. Hash SHA-256 ---
   async function actualitzarHash() {
     const text = document.getElementById('input_password').value;
     const outputCamp = document.getElementById('codi_generat');
-
     if (text === "") { outputCamp.value = ""; return; }
-
     const encoder = new TextEncoder();
     const data = encoder.encode(text);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    
-    outputCamp.value = hashHex;
+    outputCamp.value = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
-
   document.getElementById('input_password').addEventListener('input', actualitzarHash);
 
-  // --- Gestió d'Enviament ---
-  document.getElementById('formIA').addEventListener('submit', function(e) {
-    e.preventDefault(); 
-
-    const boto = document.getElementById('btnEnviar');
+  // --- 4. Enviar Dades (VERSIÓ ARREGLADA AMB GET) ---
+  document.getElementById('formIA').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const nom = inputNom.value.trim();
+    const codi = document.getElementById('codi_generat').value;
     const missatge = document.getElementById('missatgeEstat');
-    const nomProposat = document.getElementById('nom_ia').value;
-    const codiFinal = document.getElementById('codi_generat').value;
 
-    // La validació del checkbox ja la fa el navegador (required) i l'estat disabled del botó,
-    // però per seguretat extra la mantenim:
-    if(!checkBases.checked) {
-        alert("Has d'acceptar les bases.");
-        return;
-    }
+    inputNom.classList.remove('error');
+    errorNom.style.display = 'none';
+    missatge.style.display = 'none';
 
-    if(!codiFinal) {
-        alert("Si us plau, escriu una contrasenya per generar el codi segur.");
-        return;
-    }
+    if (!codi) { alert("Falta la contrasenya per generar el codi."); return; }
 
-    // Enviant...
-    boto.disabled = true;
-    boto.innerHTML = '<span style="display:inline-block; animation: spin 1s linear infinite;">⏳</span> Enviant...';
-    missatge.style.display = "none";
+    btnEnviar.disabled = true;
+    btnEnviar.innerText = "Connectant amb Google...";
+    
+    try {
+        // A. CONSULTAR (GET) - Això ja funcionava
+        const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?check=${encodeURIComponent(nom)}`);
+        if (!checkResponse.ok) throw new Error(`Error Check: ${checkResponse.status}`);
+        const checkResult = await checkResponse.json();
 
-    const dades = {
-      nom_ia: nomProposat,
-      codi_usuari: codiFinal 
-    };
+        if (checkResult.exists) {
+            inputNom.classList.add('error');
+            errorNom.style.display = 'block';
+            btnEnviar.disabled = false;
+            btnEnviar.innerText = "ENVIAR PROPOSTA";
+            alert("Aquest nom ja està registrat. Tria'n un altre.");
+            return; 
+        }
 
-    fetch(ENDPOINT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dades)
-    })
-    .then(response => {
-      if (response.ok) {
-        missatge.innerHTML = "✅ Proposta registrada correctament!";
-        missatge.style.display = "block";
-        missatge.style.color = "#276749";
-        missatge.style.backgroundColor = "#C6F6D5";
+        // B. GUARDAR (NOVA VERSIÓ AMB GET) - Aquesta és la part màgica que arregla l'error
+        // En lloc de fer POST, ho enviem tot a la URL. Com que el codi Script accepta handleRequest(e), funcionarà igual.
+        btnEnviar.innerText = "Guardant dades...";
         
-        boto.innerText = "ENVIAT (Fes captura ara)";
-        boto.style.background = "#48BB78";
-      } else {
-        throw new Error('Error del servidor');
-      }
-    })
-    .catch(error => {
-      console.error(error);
-      missatge.innerText = "❌ Error de connexió. Torna-ho a provar.";
-      missatge.style.display = "block";
-      missatge.style.color = "#9B2C2C";
-      missatge.style.backgroundColor = "#FED7D7";
-      
-      boto.disabled = false;
-      boto.innerText = "Tornar a intentar";
-    });
+        const urlGuardar = `${GOOGLE_SCRIPT_URL}?nom=${encodeURIComponent(nom)}&codi=${encodeURIComponent(codi)}`;
+        
+        const saveResponse = await fetch(urlGuardar);
+        
+        if (!saveResponse.ok) {
+            // Si falla, mirem el text per saber per què
+            const textError = await saveResponse.text();
+            throw new Error(`Error del servidor (${saveResponse.status}): ${textError}`);
+        }
+        
+        // Intentem llegir el JSON de resposta
+        let saveResult;
+        try {
+            saveResult = await saveResponse.json();
+        } catch (e) {
+            // Si la resposta no és JSON, potser ha tornat un error HTML de Google (Full no trobat?)
+            throw new Error("La resposta del servidor no és vàlida. Revisa el nom del full de càlcul (Full1).");
+        }
+
+        if (saveResult.result === "success") {
+            // C. GENERAR I MOSTRAR PDF
+            btnEnviar.innerText = "Generant rebut...";
+            await generarIMostrarPDF();
+            btnEnviar.innerText = "ENVIAT";
+        } else {
+            throw new Error(saveResult.message || "Error desconegut al guardar");
+        }
+
+    } catch (error) {
+        console.error(error);
+        missatge.innerText = `❌ Error: ${error.message}`;
+        missatge.style.display = "block";
+        missatge.style.color = "#9B2C2C";
+        missatge.style.backgroundColor = "#FED7D7";
+        btnEnviar.disabled = false;
+        btnEnviar.innerText = "Tornar a intentar";
+    }
   });
+
+  // --- 5. Generador de PDF (Igual que abans) ---
+  function getBase64Image(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    return canvas.toDataURL("image/png");
+  }
+
+  async function generarIMostrarPDF() {
+    const { jsPDF } = window.jspdf;
+    
+    const elementFormulari = document.getElementById('targeta-formulari');
+    const canvas = await html2canvas(elementFormulari, { scale: 2 }); 
+    const imgFormulari = canvas.toDataURL('image/png');
+
+    // Comprovació de seguretat per si les imatges no han carregat
+    const elLogoCE = document.getElementById('imgLogoCE');
+    const elLogoIA = document.getElementById('imgLogoIA');
+    
+    let imgLogoCE = null;
+    let imgLogoIA = null;
+
+    // Només intentem agafar el base64 si la imatge ha carregat
+    if (elLogoCE.complete && elLogoCE.naturalHeight !== 0) {
+        imgLogoCE = getBase64Image(elLogoCE);
+    }
+    if (elLogoIA.complete && elLogoIA.naturalHeight !== 0) {
+        imgLogoIA = getBase64Image(elLogoIA);
+    }
+
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth(); 
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+
+    // CAPÇALERA
+    if (imgLogoCE) doc.addImage(imgLogoCE, 'PNG', margin, 10, 40, 15);
+    if (imgLogoIA) doc.addImage(imgLogoIA, 'PNG', pageWidth - margin - 25, 8, 25, 25);
+
+    doc.setFontSize(18);
+    doc.setTextColor(0, 95, 133);
+    doc.text("REBUT DE REGISTRE", pageWidth / 2, 40, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setTextColor(220, 53, 69);
+    const avisText = "Guarda aquest rebut i no el comparteixis és una prova de la teva participació";
+    doc.text(avisText, pageWidth / 2, 50, { align: 'center', maxWidth: 160 });
+
+    const imgProps = doc.getImageProperties(imgFormulari);
+    const pdfImgHeight = (imgProps.height * contentWidth) / imgProps.width;
+    doc.addImage(imgFormulari, 'PNG', margin, 60, contentWidth, pdfImgHeight);
+
+    let yPos = 60 + pdfImgHeight + 10;
+    doc.setDrawColor(200);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += 8;
+
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text("RESUM DE LES BASES:", margin, yPos);
+    yPos += 5;
+
+    doc.setFontSize(9);
+    doc.setTextColor(80);
+    const textBases = document.getElementById('text-bases-imprimir').innerText;
+    const textLines = doc.splitTextToSize(textBases, contentWidth);
+    doc.text(textLines, margin, yPos);
+
+    pdfBlobGlobal = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlobGlobal);
+
+    document.getElementById('pdfFrame').src = pdfUrl;
+    obrirModal('modalRebut');
+  }
+
+  function descarregarPDFManual() {
+      if (pdfBlobGlobal) {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(pdfBlobGlobal);
+          link.download = "Rebut-Concurs-IA.pdf";
+          link.click();
+      }
+  }
+
+  // --- 6. Gestió de Modals ---
+  function obrirModal(id) { 
+      document.getElementById(id).style.display = 'flex'; 
+      document.body.style.overflow = 'hidden'; 
+  }
+  function tancarModalBoto(id) { 
+      document.getElementById(id).style.display = 'none'; 
+      document.body.style.overflow = 'auto'; 
+  }
+  function tancarModal(e, id) { 
+      if (id === 'modalRebut') return; 
+      if (e.target.id === id) tancarModalBoto(id); 
+  }
 </script>
 
 </body>
