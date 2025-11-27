@@ -214,6 +214,7 @@
   .success-icon { font-size: 50px; margin-bottom: 15px; display: block; }
   .btn-download { background: var(--success-green); margin-bottom: 10px; }
   .btn-download:hover { background: #22543d; }
+  /* Botó tancar eliminat o ocultat segons nova petició */
 
   #missatgeEstat { text-align: center; margin-top: 15px; font-weight: bold; padding: 15px; border-radius: 8px; }
 
@@ -237,7 +238,7 @@
 
 <div class="main-card" id="targeta-formulari">
     <h1>Posa nom a la IA</h1>
-    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú d'Encamp</p>
+    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú d'Encamp.</p>
 
     <form id="formIA">
         <div class="camp">
@@ -408,7 +409,7 @@
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFqJ4_51A-g1qJCjluCYENoaFog2kyCoSODSosX2BoSpBg_EUZyPjKDYubwModo4Ag8A/exec"; 
 
   // Variable per controlar l'estat del botó final
-  let estatBotoFinal = "descarregar"; 
+  let estatBotoFinal = "descarregar"; // 'descarregar' o 'tancar'
 
   document.addEventListener("DOMContentLoaded", () => {
       const checkBases = document.getElementById('accepto_bases');
@@ -450,7 +451,7 @@
       checkBases.addEventListener('change', function() {
           if (this.checked) {
               btnEnviar.disabled = false;
-              btnEnviar.innerText = "ENVIA LA PROPOSTA";
+              btnEnviar.innerHTML = "ENVIA LA PROPOSTA <span style='text-transform: none; font-style: italic; font-weight: normal; font-size: 0.9em;'>(amb mòbil, abans fes captura de pantalla)</span>";
           } else {
               btnEnviar.disabled = true;
               btnEnviar.innerText = "⚠️ Accepta les bases per enviar";
@@ -495,28 +496,29 @@
         btnEnviar.innerText = "COMPROVANT EL NOM...";
         
         try {
-            const timestamp = Date.now();
-            
             // Check duplicats
-            const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?check=${encodeURIComponent(nom)}&t=${timestamp}`);
+            const checkResponse = await fetch(`${GOOGLE_SCRIPT_URL}?check=${encodeURIComponent(nom)}&t=${Date.now()}`);
             const checkResult = await checkResponse.json();
 
             if (checkResult.exists) {
                 inputNom.classList.add('error');
                 errorNom.style.display = 'block';
+                
+                // Diferenciem el missatge segons la raó
                 if (checkResult.reason === "inappropriate") {
                     errorNom.innerText = "⚠️ Aquest nom conté paraules no permeses.";
                 } else {
                     errorNom.innerText = "⚠️ Aquest nom ja s'ha proposat! Si us plau, tria'n un altre.";
                 }
+
                 btnEnviar.disabled = false;
-                btnEnviar.innerText = "ENVIA LA PROPOSTA";
+                btnEnviar.innerHTML = "ENVIA LA PROPOSTA <span style='text-transform: none; font-style: italic; font-weight: normal; font-size: 0.9em;'>(amb mòbil, abans fes captura de pantalla)</span>";
                 return; 
             }
 
             // Save
             btnEnviar.innerText = "Guardant...";
-            const urlGuardar = `${GOOGLE_SCRIPT_URL}?nom=${encodeURIComponent(nom)}&codi=${encodeURIComponent(codi)}&t=${timestamp}`;
+            const urlGuardar = `${GOOGLE_SCRIPT_URL}?nom=${encodeURIComponent(nom)}&codi=${encodeURIComponent(codi)}&t=${Date.now()}`;
             const saveResponse = await fetch(urlGuardar);
             const saveResult = await saveResponse.json();
 
@@ -525,20 +527,21 @@
                 await prepararPDF();
                 obrirModal('modalRebut');
                 
+                // Reset de l'estat del botó final
                 estatBotoFinal = "descarregar";
                 const btn = document.querySelector('.btn-download');
                 btn.innerHTML = "📥 DESCARREGA EL REBUT PDF";
                 btn.style.backgroundColor = "var(--success-green)";
                 document.getElementById('downloadInfo').style.display = 'none';
                 
-                btnEnviar.innerText = "ENVIAT";
+                btnEnviar.innerHTML = "ENVIA LA PROPOSTA <span style='text-transform: none; font-style: italic; font-weight: normal; font-size: 0.9em;'>(amb mòbil, abans fes captura de pantalla)</span>";
             } else {
                 if (saveResult.message === "Nom inapropiat") {
                     inputNom.classList.add('error');
                     errorNom.innerText = "⚠️ Aquest nom conté paraules no permeses.";
                     errorNom.style.display = 'block';
                     btnEnviar.disabled = false;
-                    btnEnviar.innerText = "ENVIA LA PROPOSTA";
+                    btnEnviar.innerHTML = "ENVIA LA PROPOSTA <span style='text-transform: none; font-style: italic; font-weight: normal; font-size: 0.9em;'>(amb mòbil, abans fes captura de pantalla)</span>";
                 } else {
                     throw new Error(saveResult.message || "Error");
                 }
@@ -624,7 +627,7 @@
     const textBases = basesElement.innerText; 
     
     const nomInput = document.getElementById('nom_ia');
-    const nomNet = (nomInput && nomInput.value) ? nomInput.value.trim().replace(/[^a-zA-Z0-9]/g, '_') : "Proposta";
+    const nomNet = (nomInput && nomInput.value) ? nomInput.value.trim().replace(/\s+/g, '_') : "Proposta";
     pdfDocGlobal.currentFilename = `Rebut_IA_${nomNet}.pdf`;
 
     const lines = doc.splitTextToSize(textBases, contentWidth);
