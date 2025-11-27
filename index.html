@@ -353,8 +353,8 @@
                 <li><strong>Innovació:</strong> Caràcter tecnològic i modern.</li>
                 <li><strong>Impacte:</strong> Brevetat, facilitat de record i potència comunicativa.</li>
                 <li><strong>Creativitat i Abstracció:</strong> Es valorarà positivament la creació de nous conceptes. Es penalitzaran o descartaran els noms propis de persona (antropònims) per afavorir l'originalitat.</li>
-                <li><strong>Desempat:</strong> En cas d'empat entre diverses candidatures per entrar a la final, els Cònsols votaran el desempat amb la finalitat que hi hagi únicament 10 propostes finalistes.</li>
             </ul>
+            <p><strong>Desempat:</strong> En cas d'empat entre diverses candidatures per entrar a la final, els Cònsols votaran el desempat amb la finalitat que hi hagi únicament 10 propostes finalistes.</p>
             <p><strong>FASE 2: Votació Popular (Treballadors)</strong></p>
             <ul>
                 <li>Els 10 finalistes se sotmetran a votació oberta a tots els treballadors qualificats com a participants.</li>
@@ -605,13 +605,11 @@
     let pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
     
     // Check available vertical space on first page
-    // Header (10 + logoW) ~ 45mm + Title (55mm) + Warning (63mm) + spacing ~ 70mm start
     const yPosImage = 70;
-    const maxY = pageHeight - margin; // 297 - 20 = 277mm
-    const availableHeight = maxY - yPosImage; // approx 207mm
+    const maxY = pageHeight - margin; 
+    const availableHeight = maxY - yPosImage; 
 
     if (pdfImgHeight > availableHeight) {
-        // Image is too tall, scale it down to fit
         pdfImgHeight = availableHeight;
         pdfImgWidth = (imgProps.width * pdfImgHeight) / imgProps.height;
     }
@@ -647,7 +645,7 @@
     
     // Get name from input
     const nomInput = document.getElementById('nom_ia');
-    const nomNet = (nomInput && nomInput.value) ? nomInput.value.trim().replace(/[^a-zA-Z0-9]/g, '_') : "Proposta";
+    const nomNet = (nomInput && nomInput.value) ? nomInput.value.trim().replace(/\s+/g, '_') : "Proposta";
     pdfDocGlobal.currentFilename = `Rebut_IA_${nomNet}.pdf`;
 
     const lines = doc.splitTextToSize(textBases, contentWidth);
@@ -670,24 +668,19 @@
           if (pdfDocGlobal) {
               const filename = pdfDocGlobal.currentFilename || "Rebut-Concurs-IA.pdf";
               
-              // ESTRATÈGIA MÒBIL/SHAREPOINT APP: SHARE API O FALLBACK
+              // ESTRATÈGIA BASE64 (OPCIÓ B) PER MÒBILS/SHAREPOINT
               const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-              if (isMobile && navigator.share && navigator.canShare) {
-                  const blob = pdfDocGlobal.output('blob');
-                  const file = new File([blob], filename, { type: "application/pdf" });
+              if (isMobile) {
+                  const dataUri = pdfDocGlobal.output('datauristring');
                   
-                  if (navigator.canShare({ files: [file] })) {
-                      navigator.share({
-                          files: [file],
-                          title: 'Rebut Concurs IA',
-                          text: 'Aquí tens el teu justificant.'
-                      }).catch((error) => console.log('Compartició cancel·lada', error));
+                  const win = window.open();
+                  if (win) {
+                      win.document.write('<iframe src="' + dataUri + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
                   } else {
-                      pdfDocGlobal.save(filename); // Fallback
+                      window.location.href = dataUri; 
                   }
               } else {
-                  // Mètode clàssic (PC / Android antic)
                   pdfDocGlobal.save(filename);
               }
 
