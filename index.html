@@ -238,7 +238,7 @@
 
 <div class="main-card" id="targeta-formulari">
     <h1>Posa nom a la IA</h1>
-    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú d'Encamp</p>
+    <p class="subtitle">Ajuda'ns a batejar la intel·ligència artificial del Comú d'Encamp.</p>
 
     <form id="formIA">
         <div class="camp">
@@ -390,6 +390,10 @@
                     ⚠️ Important: Descarrega'l i guarda'l. És l'única prova de la teva participació.
                 </p>
             </div>
+            
+            <!-- Espai per a l'avís d'Opció A -->
+            <div id="downloadInfo" style="display:none; margin-top: 15px; padding: 10px; background-color: #f0fdf4; border-radius: 8px; color: #22543d; font-weight: 600; font-size: 0.9em;">
+            </div>
         </div>
         <div class="modal-footer">
             <!-- El botó canviarà de funció segons l'estat -->
@@ -528,6 +532,7 @@
                 const btn = document.querySelector('.btn-download');
                 btn.innerHTML = "📥 DESCARREGA EL REBUT PDF";
                 btn.style.backgroundColor = "var(--success-green)";
+                document.getElementById('downloadInfo').style.display = 'none';
                 
                 btnEnviar.innerText = "ENVIAT";
             } else {
@@ -603,9 +608,9 @@
 
     const imgProps = doc.getImageProperties(imgFormulari);
     
-    // SCALING LOGIC (CORREGIDA)
-    const yPosImage = 75; // Marge seguretat
-    const availableHeight = pageHeight - yPosImage - 25; // Buffer inferior
+    // SCALING LOGIC
+    const yPosImage = 75; 
+    const availableHeight = pageHeight - yPosImage - 25; 
 
     let pdfImgWidth = contentWidth;
     let pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
@@ -635,6 +640,7 @@
     const basesElement = document.getElementById('text-bases-imprimir');
     const textBases = basesElement.innerText; 
     
+    // Get name from input
     const nomInput = document.getElementById('nom_ia');
     const nomNet = (nomInput && nomInput.value) ? nomInput.value.trim().replace(/[^a-zA-Z0-9]/g, '_') : "Proposta";
     pdfDocGlobal.currentFilename = `Rebut_IA_${nomNet}.pdf`;
@@ -652,7 +658,7 @@
     }
   }
 
-  // FUNCIÓ GESTIÓ DEL BOTÓ FINAL (VERSIÓ COMPARTIR)
+  // FUNCIÓ GESTIÓ DEL BOTÓ FINAL (OPCIÓ A: COMPARTIR + MISSATGE AVIS)
   async function gestionarBotodDescarrega() {
       if (estatBotoFinal === "descarregar") {
           // 1. DESCARREGAR
@@ -661,7 +667,7 @@
               
               let compartit = false;
 
-              // INTENT 1: WEB SHARE API
+              // INTENT 1: WEB SHARE API (Mòbils)
               if (navigator.share && navigator.canShare) {
                   try {
                       const blob = pdfDocGlobal.output('blob');
@@ -677,12 +683,19 @@
                       }
                   } catch (err) {
                       console.log('Compartició cancel·lada o fallida', err);
+                      // Si l'usuari cancel·la el menú, no considerem que hagi fallat la tècnica, 
+                      // però si falla tècnicament, saltem al fallback.
                   }
               }
 
-              // INTENT 2: DESCARREGA DIRECTA (Fallback)
+              // INTENT 2: DESCARREGA DIRECTA (Fallback per PC o si Share falla)
               if (!compartit) {
-                  pdfDocGlobal.save(filename); 
+                  pdfDocGlobal.save(filename);
+                  
+                  // AVIS OPCIÓ A: Informar si s'ha descarregat en silenci (típic en Android/SharePoint)
+                  const divInfo = document.getElementById('downloadInfo');
+                  divInfo.innerText = "✅ El fitxer s'ha guardat a la teva carpeta de Descàrregues.";
+                  divInfo.style.display = 'block';
               }
 
               // 2. CANVIAR ESTAT BOTÓ
