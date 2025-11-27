@@ -391,7 +391,7 @@
                 </p>
             </div>
             
-            <!-- Espai per a l'avís d'Opció A (si es descarrega automàticament) -->
+            <!-- Espai per a l'avís d'Opció A -->
             <div id="downloadInfo" style="display:none; margin-top: 15px; padding: 10px; background-color: #f0fdf4; border-radius: 8px; color: #22543d; font-weight: 600; font-size: 0.9em;">
             </div>
         </div>
@@ -409,7 +409,7 @@
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFqJ4_51A-g1qJCjluCYENoaFog2kyCoSODSosX2BoSpBg_EUZyPjKDYubwModo4Ag8A/exec"; 
 
   // Variable per controlar l'estat del botó final
-  let estatBotoFinal = "descarregar"; // 'descarregar' o 'tancar'
+  let estatBotoFinal = "descarregar"; 
 
   document.addEventListener("DOMContentLoaded", () => {
       const checkBases = document.getElementById('accepto_bases');
@@ -504,7 +504,6 @@
                 inputNom.classList.add('error');
                 errorNom.style.display = 'block';
                 
-                // Diferenciem el missatge segons la raó
                 if (checkResult.reason === "inappropriate") {
                     errorNom.innerText = "⚠️ Aquest nom conté paraules no permeses.";
                 } else {
@@ -527,7 +526,6 @@
                 await prepararPDF();
                 obrirModal('modalRebut');
                 
-                // Reset de l'estat del botó final
                 estatBotoFinal = "descarregar";
                 const btn = document.querySelector('.btn-download');
                 btn.innerHTML = "📥 DESCARREGA EL REBUT PDF";
@@ -607,9 +605,23 @@
 
     const imgProps = doc.getImageProperties(imgFormulari);
     const pdfImgHeight = (imgProps.height * contentWidth) / imgProps.width;
-    doc.addImage(imgFormulari, 'PNG', margin, 70, contentWidth, pdfImgHeight);
+    
+    // AUTO-ESCALAT Imatge (Evitar talls)
+    let finalHeight = pdfImgHeight;
+    let finalWidth = contentWidth;
+    
+    const yPosImage = 75;
+    const availableHeight = pageHeight - yPosImage - 25; // Marge seguretat inferior
+    
+    if (finalHeight > availableHeight) {
+        finalHeight = availableHeight;
+        finalWidth = (imgProps.width * finalHeight) / imgProps.height;
+    }
+    
+    const xPosImage = (pageWidth - finalWidth) / 2;
+    doc.addImage(imgFormulari, 'PNG', xPosImage, yPosImage, finalWidth, finalHeight);
 
-    let yPos = 70 + pdfImgHeight + 15;
+    let yPos = yPosImage + finalHeight + 15;
     doc.setDrawColor(200);
     doc.line(margin, yPos, pageWidth - margin, yPos);
     yPos += 10;
@@ -700,3 +712,5 @@
 
 </body>
 </html>
+
+
