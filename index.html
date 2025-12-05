@@ -12,7 +12,7 @@
   :root {
       --primary-color: #00e5ff; /* Cian */
       --accent-color: #bd00ff; /* Lila */
-      --matrix-off: #0e2a47;   /* Blau més clar perquè es vegi la graella */
+      --matrix-off: #0e2a47;   /* Blau fosc */
       --text-light: #e0e6ed;
       --glass-bg: rgba(0, 0, 0, 0.8); 
       --glass-border: rgba(0, 229, 255, 0.2);
@@ -24,17 +24,17 @@
       color: var(--text-light);
       margin: 0;
       padding: 0;
-      height: 100vh;
+      height: 100vh; /* Força alçada total */
       width: 100vw;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: hidden; /* Bloqueja scroll */
       position: relative;
   }
 
-  /* CANVAS DE FONS (PANELL DE PÍXELS) */
+  /* CANVAS DE FONS */
   #led-canvas {
       position: absolute;
       top: 0;
@@ -44,7 +44,7 @@
       z-index: 0;
   }
 
-  /* CONTENIDOR D'ELEMENTS FLOTANTS (LOGOS) */
+  /* CONTENIDOR ESPURNES */
   #sparks-container {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -53,25 +53,44 @@
       overflow: hidden;
   }
 
-  /* ESTIL LOGO FLOTANT */
+  /* Estils Noms i Logos flotants */
+  .spark-name {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: clamp(0.7rem, 1.5vh, 1rem); /* Mida relativa */
+      white-space: nowrap;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: sparkFlash 3s ease-in-out forwards;
+      text-shadow: 0 0 10px currentColor;
+  }
+
   .spark-logo {
       position: absolute;
-      width: 50px; /* Mida petita */
+      width: clamp(40px, 8vh, 60px); /* Mida relativa a l'alçada */
       height: auto;
       object-fit: contain;
       opacity: 0;
       filter: drop-shadow(0 0 15px var(--primary-color));
-      animation: logoFloat 4s ease-in-out forwards;
+      animation: logoFlash 2.5s ease-in-out forwards;
   }
 
-  @keyframes logoFloat {
-      0% { opacity: 0; transform: scale(0.5) translateY(20px) rotate(-10deg); }
-      20% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
-      80% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
-      100% { opacity: 0; transform: scale(0.8) translateY(-20px) rotate(10deg); }
+  @keyframes sparkFlash {
+      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+      20% { opacity: 1; transform: scale(1.1) translateY(0); }
+      60% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.9) translateY(-20px); }
   }
 
-  /* VORA ROTATÒRIA */
+  @keyframes logoFlash {
+      0% { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+      20% { opacity: 0.9; transform: scale(1) rotate(0deg); }
+      80% { opacity: 0.9; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8) rotate(10deg); }
+  }
+
+  /* TARGETA CENTRAL ADAPTATIVA */
   .card-wrapper {
       position: relative;
       z-index: 10;
@@ -81,6 +100,8 @@
       box-shadow: 0 0 80px rgba(0, 0, 0, 0.8); 
       max-width: 700px;
       width: 90%;
+      /* Màxim alçada per evitar sortir-se en pantalles apaïsades */
+      max-height: 90vh; 
   }
 
   .card-wrapper::before {
@@ -100,16 +121,20 @@
 
   @keyframes rotate { 100% { transform: rotate(360deg); } }
 
-  /* TARGETA DE CONTINGUT */
   .main-card {
       position: relative;
       background: var(--glass-bg);
       backdrop-filter: blur(8px); 
       -webkit-backdrop-filter: blur(8px);
-      padding: 60px 30px;
+      /* Padding relatiu a l'alçada (vh) */
+      padding: 4vh 5vw; 
       border-radius: 24px;
       text-align: center;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
   }
 
   .content-wrapper {
@@ -117,36 +142,41 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center; /* Centrat vertical absolut */
       width: 100%;
+      height: 100vh;
   }
 
+  /* TEXTOS ADAPTATIUS (CLAMP) */
   h1 {
-      margin: 0 0 10px 0;
+      margin: 0 0 1vh 0;
       font-weight: 800;
-      font-size: 2.2rem;
+      /* S'adapta entre 1.5rem i 4vh */
+      font-size: clamp(1.5rem, 4vh, 2.5rem);
       background: linear-gradient(to right, #fff, var(--primary-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -1px;
       text-transform: uppercase;
+      line-height: 1.1;
   }
 
   .subtitle {
-      font-size: 1.1rem;
+      font-size: clamp(0.9rem, 2vh, 1.2rem);
       color: #a3bba3;
-      margin-bottom: 40px;
+      margin-bottom: 3vh;
       font-weight: 500;
+      line-height: 1.3;
   }
 
-  /* ESTADÍSTIQUES */
   .stats-box {
-      margin: 30px 0;
-      padding: 20px;
+      margin: 2vh 0;
+      padding: 2vh 4vw;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: inline-block;
-      min-width: 200px;
+      min-width: 150px;
       animation: heartbeat 3s infinite;
   }
 
@@ -160,7 +190,8 @@
   }
 
   .big-number {
-      font-size: 5rem;
+      /* S'adapta molt per no ocupar massa */
+      font-size: clamp(3rem, 10vh, 6rem);
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
       color: #fff;
@@ -169,27 +200,29 @@
   }
 
   .big-label {
-      font-size: 0.9rem;
+      font-size: clamp(0.7rem, 1.5vh, 1rem);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 2px;
       color: var(--primary-color);
-      margin-top: 10px;
+      margin-top: 1vh;
   }
 
   .footer-msg {
-      font-size: 1.2rem;
+      font-size: clamp(0.8rem, 2vh, 1.3rem);
       color: #fff;
       font-weight: 700;
-      line-height: 1.6;
-      margin-top: 30px;
+      line-height: 1.4;
+      margin-top: 3vh;
       text-shadow: 0 0 10px rgba(189, 0, 255, 0.5);
   }
 
-  @media (max-width: 480px) {
-      .big-number { font-size: 4rem; }
-      h1 { font-size: 1.8rem; }
-      .main-card { padding: 40px 20px; }
+  /* Ajustos específics per pantalles molt baixes (mòbil horitzontal o embed petit) */
+  @media (max-height: 600px) {
+     .main-card { padding: 2vh 5vw; }
+     .subtitle { margin-bottom: 1vh; }
+     .stats-box { margin: 1vh 0; }
+     .footer-msg { margin-top: 1vh; }
   }
 </style>
 </head>
@@ -199,8 +232,6 @@
 <div id="sparks-container"></div>
 
 <div class="content-wrapper">
-    <!-- Logo eliminat de la capçalera fixa, ara surt flotant -->
-    
     <div class="card-wrapper">
         <div class="main-card">
             <h1>Proposta de noms finalitzada</h1>
